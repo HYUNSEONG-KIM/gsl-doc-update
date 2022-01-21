@@ -78,16 +78,24 @@ will contribute.
 Contributing
 ==========================
 
-This design document was originally written in 1996. As of 2004, GSL itself is essentially feature complete, the developers are not actively working on any major new functionality.
+This design document was originally written in 1996. As of 2004, GSL itself is essentially feature complete, 
+the developers are not actively working on any major new functionality.
 
-The main emphasis is now on ensuring the stability of the existing functions, improving consistency, tidying up a few problem areas and fixing any bugs that are reported. Potential contributors are encouraged to gain familiarity with the library by investigating and fixing known problems listed in the BUGS file in the CVS repository.
+The main emphasis is now on ensuring the stability of the existing functions, improving consistency, 
+tidying up a few problem areas and fixing any bugs that are reported. 
+Potential contributors are encouraged to gain familiarity with the library by 
+investigating and fixing known problems listed in the :code:`BUGS` file in the CVS repository.
 
-Adding large amounts of new code is difficult because it leads to differences in the maturity of different parts of the library. To maintain stability, any new functionality is encouraged as packages, built on top of GSL and maintained independently by the author, as in other free software projects (such as the Perl CPAN archive and TeX CTAN archive, etc).
+Adding large amounts of new code is difficult because it leads to differences in the maturity of different parts of the library. 
+To maintain stability, any new functionality is encouraged as packages, 
+built on top of GSL and maintained independently by the author, as in other free software projects 
+(such as the Perl CPAN archive and TeX CTAN archive, etc).
 
 Packages
 -----------------
 
-The design of GSL permits extensions to be used alongside the existing library easily by simple linking. For example, additional random number generators can be provided in a separate library:
+The design of GSL permits extensions to be used alongside the existing library easily by simple linking. 
+For example, additional random number generators can be provided in a separate library:
 
 .. code-block:: console
 
@@ -97,16 +105,21 @@ The design of GSL permits extensions to be used alongside the existing library e
     $ ...
     $ gcc -Wall main.c -lrngextra -lgsl -lgslcblas -lm
 
-The points below summarise the package design guidelines. These are intended to ensure that packages are consistent with GSL itself, to make life easier for the end-user and make it possible to distribute popular well-tested packages as part of the core GSL in future.
+The points below summarise the package design guidelines. 
+These are intended to ensure that packages are consistent with GSL itself, 
+to make life easier for the end-user and make it possible to distribute popular well-tested packages as part of the core GSL in future.
 
 * Follow the GSL and GNU coding standards described in this document
 
-    This means using the standard GNU packaging tools, such as Automake, providing documentation in Texinfo format, and a test suite. The test suite should run using ‘make check’, and use the test functions provided in GSL to produce the output with PASS:/FAIL: lines. It is not essential to use libtool since packages are likely to be small, a static library is sufficient and simpler to build.
+    This means using the standard GNU packaging tools, such as Automake, 
+    providing documentation in Texinfo format, and a test suite. The test suite should run using ‘make check’, 
+    and use the test functions provided in GSL to produce the output with :code:`PASS:/FAIL:` lines. 
+    It is not essential to use libtool since packages are likely to be small, a static library is sufficient and simpler to build.
 
 
-* Use a new unique prefix for the package (do not use ‘gsl_’ - this is reserved for internal use).
+* Use a new unique prefix for the package (do not use ':code:`gsl_`' - this is reserved for internal use).
 
-     For example, a package of additional random number generators might use the prefix rngextra.
+     For example, a package of additional random number generators might use the prefix :code:`rngextra`.
 
      .. code-block:: c
 
@@ -115,15 +128,25 @@ The points below summarise the package design guidelines. These are intended to 
          gsl_rng * r = gsl_rng_alloc (rngextra_lsfr32);
 
 * Use a meaningful version number which reflects the state of development
-The design of GSL permits extensions to be used alongside the existing library easily by simple linking. For example, additional random number generators can be provided in a separate library:
+
+     Generally, :code:`0.x` are alpha versions, which provide no guarantees. Following that, :code:`0.9.x` are beta versions, 
+     which should be essentially complete, subject only to minor changes and bug fixes. 
+     The first major release is :code:`1.0`. Any version number of :code:`1.0` or higher should be suitable for production use with a well-defined API.
+
+     The API must not change in a major release and should be backwards-compatible in its behavior (excluding actual bug-fixes), 
+     so that existing code do not have to be modified. Note that the API includes all exported definitions, 
+     including data-structures defined with :type:`struct`. If you need to change the API in a package, it requires a new major release (e.g. :code:`2.0`).
 
 * Use the GNU General Public License (GPL)
 
-Post announcements of your package releases to gsl-discuss@sourceware.org so that information about them can be added to the GSL webpages.
+    Follow the normal procedures of obtaining a copyright disclaimer if you would like 
+    to have the package considered for inclusion in GSL itself in the future (see :ref:`Legal issues`).
 
-For security, sign your package with GPG (gpg --detach-sign file).
+Post announcements of your package releases to :email:`gsl-discuss@sourceware.org` so that information about them can be added to the GSL webpages.
 
-An example package ‘rngextra’ containing two additional random number generators can be found at http://www.network-theory.co.uk/download/rngextra/.
+For security, sign your package with GPG (:code:`gpg --detach-sign` **file**).
+
+An example package :code:`rngextra` containing two additional random number generators can be found at http://www.network-theory.co.uk/download/rngextra/.
 
 
 Design
@@ -156,25 +179,47 @@ What routines are not implemented
 
 * anything which already exists as a high-quality GPL’ed package.
 * anything which is too big - i.e. an application in its own right rather than a subroutine
-* For example, partial differential equation solvers are often huge and very specialized applications (since there are so many types of PDEs, types of solution, types of grid, etc). This sort of thing should remain separate. It is better to point people to the good applications which exist.
+  
+    For example, partial differential equation solvers are often huge and very specialized applications 
+    (since there are so many types of PDEs, types of solution, types of grid, etc). 
+    This sort of thing should remain separate. 
+    It is better to point people to the good applications which exist.
+
 * anything which is independent and useful separately.
-* Arguably functions for manipulating date and time, or financial functions might be included in a "scientific" library. However, these sorts of modules could equally well be used independently in other programs, so it makes sense for them to be separate libraries.
+
+    Arguably functions for manipulating date and time, or 
+    financial functions might be included in a "scientific" library. 
+    However, these sorts of modules could equally well be used independently in other programs, 
+    so it makes sense for them to be separate libraries.
 
 Design of Numerical Libraries
 ---------------------------------------
 
-In writing a numerical library there is a unavoidable conflict between completeness and simplicity. Completeness refers to the ability to perform operations on different objects so that the group is "closed". In mathematics objects can be combined and operated on in an infinite number of ways. For example, I can take the derivative of a scalar field with respect to a vector and the derivative of a vector field wrt. a scalar (along a path).
+In writing a numerical library there is a unavoidable conflict between completeness and simplicity. 
+Completeness refers to the ability to perform operations on different objects so that the group is "closed". 
+In mathematics objects can be combined and operated on in an infinite number of ways. 
+For example, I can take the derivative of a scalar field with respect to a vector and the derivative of a vector field wrt. a scalar (along a path).
 
-There is a definite tendency to unconsciously try to reproduce all these possibilities in a numerical library, by adding new features one by one. After all, it is always easy enough to support just one more feature … so why not?
+There is a definite tendency to unconsciously try to reproduce all these possibilities in a numerical library, 
+by adding new features one by one. 
+After all, it is always easy enough to support just one more feature … so why not?
 
-Looking at the big picture, no-one would start out by saying "I want to be able to represent every possible mathematical object and operation using C structs" – this is a strategy which is doomed to fail. There is a limited amount of complexity which can be represented in a programming language like C. Attempts to reproduce the complexity of mathematics within such a language would just lead to a morass of unmaintainable code. However, it’s easy to go down that road if you don’t think about it ahead of time.
+Looking at the big picture, no-one would start out by saying 
+"I want to be able to represent every possible mathematical object and operation using C structs" - this is a strategy which is doomed to fail. 
+There is a limited amount of complexity which can be represented in a programming language like C. 
+Attempts to reproduce the complexity of mathematics within such a language would just lead to a morass of unmaintainable code. 
+However, it’s easy to go down that road if you don’t think about it ahead of time.
 
-It is better to choose simplicity over completeness. In designing new parts of the library keep modules independent where possible. If interdependencies between modules are introduced be sure about where you are going to draw the line.
+It is better to choose simplicity over completeness. In designing new parts of the library keep modules independent where possible. 
+If interdependencies between modules are introduced be sure about where you are going to draw the line.
 
 Code Reuse
 ---------------------------------------
 
-It is useful if people can grab a single source file and include it in their own programs without needing the whole library. Try to allow standalone files like this whenever it is reasonable. Obviously the user might need to define a few macros, such as GSL_ERROR, to compile the file but that is ok. Examples where this can be done: grabbing a single random number generator.
+It is useful if people can grab a single source file and include it in their own programs without needing the whole library. 
+Try to allow standalone files like this whenever it is reasonable. 
+Obviously the user might need to define a few macros, such as :macro:`GSL_ERROR`, 
+to compile the file but that is ok. Examples where this can be done: grabbing a single random number generator.
 
 
 
@@ -189,46 +234,81 @@ The people who kick off this project should set the coding standards and convent
 * We follow the conventions of the GNU C Library.
 * We follow the conventions of the glib GTK support Library.
 
-The references for these standards are the GNU Coding Standards document, Harbison and Steele C: A Reference Manual, the GNU C Library Manual (version 2), and the Glib source code.
+The references for these standards are the 
+GNU Coding Standards document, 
+Harbison and Steele C: A Reference Manual, 
+the GNU C Library Manual (version 2), and the 
+Glib source code.
 
-For mathematical formulas, always follow the conventions in Abramowitz & Stegun, the Handbook of Mathematical Functions, since it is the definitive reference and also in the public domain.
+For mathematical formulas, always follow the conventions in 
+Abramowitz & Stegun, the Handbook of Mathematical Functions, 
+since it is the definitive reference and also in the public domain.
 
-If the project has a philosophy it is to "Think in C". Since we are working in C we should only do what is natural in C, rather than trying to simulate features of other languages. If there is something which is unnatural in C and has to be simulated then we avoid using it. If this means leaving something out of the library, or only offering a limited version then so be it. It is not worthwhile making the library over-complicated. There are numerical libraries in other languages, and if people need the features of those languages it would be sensible for them to use the corresponding libraries, rather than coercing a C library into doing that job.
+If the project has a philosophy it is to "Think in C". 
+Since we are working in C we should only do what is natural in C, 
+rather than trying to simulate features of other languages. 
+If there is something which is unnatural in C and has to be simulated then we avoid using it. 
+If this means leaving something out of the library, 
+or only offering a limited version then so be it. 
+It is not worthwhile making the library over-complicated. 
+There are numerical libraries in other languages, 
+and if people need the features of those languages it would be sensible for them to use the corresponding libraries, 
+rather than coercing a C library into doing that job.
 
-It should be borne in mind at all time that C is a macro-assembler. If you are in doubt about something being too complicated ask yourself the question "Would I try to write this in macro-assembler?" If the answer is obviously "No" then do not try to include it in GSL. [BJG]
+
+.. note:: BJG
+
+   It should be borne in mind at all time that C is a macro-assembler. 
+   If you are in doubt about something being too complicated ask yourself the question 
+   "Would I try to write this in macro-assembler?" 
+   If the answer is obviously "No" then do not try to include it in GSL. 
 
 
 It will be useful to read the following papers,
 
+   Kiem-Phong Vo, “The Discipline and Method Architecture for Reusable Libraries”, Software - Practice & Experience, v.30, pp.107-128, 2000.
 
 It is available from http://www.research.att.com/sw/tools/sfio/dm-spe.ps or the earlier technical report Kiem-Phong Vo, "An Architecture for Reusable Libraries" http://citeseer.nj.nec.com/48973.html.
 
 There are associated papers on Vmalloc, SFIO, and CDT which are also relevant to the design of portable C libraries.
 
-Kiem-Phong Vo, “Vmalloc: A General and Efficient Memory Allocator”. Software Practice & Experience, 26:1–18, 1996.
-http://www.research.att.com/sw/tools/vmalloc/vmalloc.ps
-
-Kiem-Phong Vo. “Cdt: A Container Data Type Library”. Soft. Prac. & Exp., 27:1177–1197, 1997
-http://www.research.att.com/sw/tools/cdt/cdt.ps
-
-David G. Korn and Kiem-Phong Vo, “Sfio: Safe/Fast String/File IO”, Proceedings of the Summer ’91 Usenix Conference, pp. 235-256, 1991.
-http://citeseer.nj.nec.com/korn91sfio.html
+   Kiem-Phong Vo, “Vmalloc: A General and Efficient Memory Allocator”. Software Practice & Experience, 26:1-18, 1996.
+   http://www.research.att.com/sw/tools/vmalloc/vmalloc.ps
+   
+   Kiem-Phong Vo. “Cdt: A Container Data Type Library”. Soft. Prac. & Exp., 27:1177-1197, 1997
+   http://www.research.att.com/sw/tools/cdt/cdt.ps
+   
+   David G. Korn and Kiem-Phong Vo, “Sfio: Safe/Fast String/File IO”, Proceedings of the Summer ’91 Usenix Conference, pp. 235-256, 1991.
+   http://citeseer.nj.nec.com/korn91sfio.html
 
 Source code should be indented according to the GNU Coding Standards, with spaces not tabs. For example, by using the indent command:
 
-indent -gnu -nut *.c *.h
+.. code-block:: c
+  
+    indent -gnu -nut *.c *.h
+
 The -nut option converts tabs into spaces.
 
 
 Background and Preparation
 ---------------------------------------
 
-Before implementing something be sure to research the subject thoroughly! This will save a lot of time in the long-run. The two most important steps are,
+Before implementing something be sure to research the subject thoroughly! 
+This will save a lot of time in the long-run. The two most important steps are,
 
 
-1. to determine whether there is already a free library (GPL or GPL-compatible) which does the job. If so, there is no need to reimplement it. Carry out a search on Netlib, GAMs, na-net, sci.math.num-analysis and the web in general. This should also provide you with a list of existing proprietary libraries which are relevant, keep a note of these for future reference in step 2.
-2. make a comparative survey of existing implementations in the commercial/free libraries. Examine the typical APIs, methods of communication between program and subroutine, and classify them so that you are familiar with the key concepts or features that an implementation may or may not have, depending on the relevant tradeoffs chosen. Be sure to review the documentation of existing libraries for useful references.
-3. read up on the subject and determine the state-of-the-art. Find the latest review papers. A search of the following journals should be undertaken.
+1. to determine whether there is already a free library (GPL or GPL-compatible) which does the job. 
+   If so, there is no need to reimplement it. Carry out a search on Netlib, GAMs, na-net, 
+   sci.math.num-analysis and the web in general. 
+   This should also provide you with a list of existing proprietary libraries 
+   which are relevant, keep a note of these for future reference in step 2.
+2. make a comparative survey of existing implementations in the commercial/free libraries. 
+   Examine the typical APIs, methods of communication between program and subroutine, 
+   and classify them so that you are familiar with the key concepts or features that an 
+   implementation may or may not have, depending on the relevant tradeoffs chosen. 
+   Be sure to review the documentation of existing libraries for useful references.
+3. read up on the subject and determine the state-of-the-art. 
+   Find the latest review papers. A search of the following journals should be undertaken.
 
      * ACM Transactions on Mathematical Software
      * Numerische Mathematik
@@ -237,35 +317,58 @@ Before implementing something be sure to research the subject thoroughly! This w
      * SIAM Journal of Numerical Analysis
      * SIAM Journal of Scientific Computing
 
-Keep in mind that GSL is not a research project. Making a good implementation is difficult enough, without also needing to invent new algorithms. We want to implement existing algorithms whenever possible. Making minor improvements is ok, but don’t let it be a time-sink.
+Keep in mind that GSL is not a research project. 
+Making a good implementation is difficult enough, without also needing to invent new algorithms. 
+We want to implement existing algorithms whenever possible. 
+Making minor improvements is ok, but don’t let it be a time-sink.
 
 Choice of Algorithms
 ---------------------------------------
 
-Whenever possible choose algorithms which scale well and always remember to handle asymptotic cases. This is particularly relevant for functions with integer arguments. It is tempting to implement these using the simple O(n) algorithms used to define the functions, such as the many recurrence relations found in Abramowitz and Stegun. While such methods might be acceptable for n=O(10-100) they will not be satisfactory for a user who needs to compute the same function for n=1000000.
+Whenever possible choose algorithms which scale well and always remember to handle asymptotic cases. 
+This is particularly relevant for functions with integer arguments. 
+It is tempting to implement these using the simple :math:`O(n)` algorithms used to define the functions, 
+such as the many recurrence relations found in Abramowitz and Stegun. 
+While such methods might be acceptable for :math:`n=O(10-100)` they will not be satisfactory for a user who needs to compute the same function for :math:`n=1000000`.
 
-Similarly, do not make the implicit assumption that multivariate data has been scaled to have components of the same size or O(1). Algorithms should take care of any necessary scaling or balancing internally, and use appropriate norms (e.g. |Dx| where D is a diagonal scaling matrix, rather than |x|).
+Similarly, do not make the implicit assumption that multivariate data has been scaled to have components of the same size or :math:`O(1)`. 
+Algorithms should take care of any necessary scaling or balancing internally, and use appropriate norms (e.g. :math:`|Dx|` where D is a diagonal scaling matrix, rather than :math:`|x|`).
 
 Documentation
 ---------------------------------------
 
-Documentation: the project leaders should give examples of how things are to be documented. High quality documentation is absolutely mandatory, so documentation should introduce the topic, and give careful reference for the provided functions. The priority is to provide reference documentation for each function. It is not necessary to provide tutorial documentation.
+Documentation: the project leaders should give examples of how things are to be documented. 
+High quality documentation is absolutely mandatory, so documentation should introduce the topic, 
+and give careful reference for the provided functions. The priority is to provide reference documentation for each function. 
+It is not necessary to provide tutorial documentation.
 
 Use free software, such as GNU Plotutils, to produce the graphs in the manual.
 
-Some of the graphs have been made with gnuplot which is not truly free (or GNU) software, and some have been made with proprietary programs. These should be replaced with output from GNU plotutils.
+Some of the graphs have been made with gnuplot which is not truly free (or GNU) software, and some have been made with proprietary programs. 
+These should be replaced with output from GNU plotutils.
 
-When citing references be sure to use the standard, definitive and best reference books in the field, rather than lesser known text-books or introductory books which happen to be available (e.g. from undergraduate studies). For example, references concerning algorithms should be to Knuth, references concerning statistics should be to Kendall & Stuart, references concerning special functions should be to Abramowitz & Stegun (Handbook of Mathematical Functions AMS-55), etc. Wherever possible refer to Abramowitz & Stegun rather than other reference books because it is a public domain work, so it is inexpensive and freely redistributable.
+When citing references be sure to use the standard, definitive and best reference books in the field, 
+rather than lesser known text-books or introductory books which happen to be available (e.g. from undergraduate studies). 
+For example, references concerning algorithms should be to Knuth, references concerning statistics should be to Kendall & Stuart, 
+references concerning special functions should be to Abramowitz & Stegun (Handbook of Mathematical Functions AMS-55), etc. 
+Wherever possible refer to Abramowitz & Stegun rather than other reference books because it is a public domain work, so it is inexpensive and freely redistributable.
 
 
-The standard references have a better chance of being available in an accessible library for the user. If they are not available and the user decides to buy a copy in order to look up the reference then this also gives them the best quality book which should also cover the largest number of other references in the GSL Manual. If many different books were to be referenced this would be an expensive and inefficient use of resources for a user who needs to look up the details of the algorithms. Reference books also stay in print much longer than text books, which are often out-of-print after a few years.
+The standard references have a better chance of being available in an accessible library for the user. 
+If they are not available and the user decides to buy a copy in order to look up the reference ]
+then this also gives them the best quality book which should also cover the largest number of other references in the GSL Manual. 
+If many different books were to be referenced this would be an expensive and inefficient use of resources for a user who needs to look up the details of the algorithms. 
+Reference books also stay in print much longer than text books, which are often out-of-print after a few years.
 
 
-Similarly, cite original papers wherever possible. Be sure to keep copies of these for your own reference (e.g. when dealing with bug reports) or to pass on to future maintainers.
+Similarly, cite original papers wherever possible. Be sure to keep copies of these for your own reference 
+(e.g. when dealing with bug reports) or to pass on to future maintainers.
 
-If you need help in tracking down references, ask on the gsl-discuss mailing list. There is a group of volunteers with access to good libraries who have offered to help GSL developers get copies of papers.
+If you need help in tracking down references, ask on the gsl-discuss mailing list. 
+There is a group of volunteers with access to good libraries who have offered to help GSL developers get copies of papers.
 
-To write mathematics in the texinfo file you can use the @math command with simple TeX commands. These are automatically surrounded by $...$ for math mode. For example,
+To write mathematics in the texinfo file you can use the :code:`@math` command with simple TeX commands. 
+These are automatically surrounded by :code:`$...$` for math mode. For example,
 
 ::
     
@@ -275,11 +378,16 @@ To write mathematics in the texinfo file you can use the @math command with simp
 will be correctly formatted in both online and TeX versions of the documentation.
 
 
-Note that you cannot use the special characters { and } inside the @math command because these conflict between TeX and Texinfo. This is a problem if you want to write something like \sqrt{x+y}.
+Note that you cannot use the special characters :code:`{` and :code:`}` inside the :code:`@math` command because these conflict between TeX and Texinfo. 
+This is a problem if you want to write something like :code:`\sqrt{x+y}`.
 
-To work around it you can precede the math command with a special macro @c which contains the explicit TeX commands you want to use (no restrictions), and put an ASCII approximation into the @math command (you can write @{ and @} there for the left and right braces). The explicit TeX commands are used in the TeX output and the argument of @math in the plain info output.
+To work around it you can precede the math command with a special macro :code:@c which contains the explicit TeX commands you want to use (no restrictions), 
+and put an ASCII approximation into the :code:`@math` command (you can write :code:`@{` and :code:`@}` there for the left and right braces). 
+The explicit TeX commands are used in the TeX output and the argument of :code:`@math` in the plain info output.
 
-Note that the @c{} macro must go at the end of the preceding line, because everything else after it is ignored—as far as texinfo is concerned it’s actually a ’comment’. The comment command @c has been modified to capture a TeX expression which is output by the next @math command. For ordinary comments use the @comment command.
+Note that the :code:`@c{}` macro must go at the end of the preceding line, because everything else after 
+it is ignored—as far as texinfo is concerned it’s actually a ’comment’. The comment command :code:`@c` has been modified to capture 
+a TeX expression which is output by the next :code:`@math` command. For ordinary comments use the @comment command.
 
 For example,
 
@@ -287,7 +395,7 @@ For example,
      this is a test @c{$\sqrt{x+y}$}
      @math{\sqrt@{x+y@}}
 
-is equivalent to this is a test $\sqrt{x+y}$ in plain TeX and this is a test @math{\sqrt@{x+y@}} in Info.
+is equivalent to :code:`this is a test $\sqrt{x+y}$` in plain TeX and :code:`this is a test @math{\sqrt@{x+y@}}` in Info.
 
 It looks nicer if some of the more cryptic TeX commands are given a C-style ascii version, e.g.
 
@@ -302,13 +410,13 @@ will be appropriately displayed in both TeX and Info.
 Namespace
 ---------------------------------------
 
-Use gsl_ as a prefix for all exported functions and variables.
+Use :code:`gsl_` as a prefix for all exported functions and variables.
 
-Use GSL_ as a prefix for all exported macros.
+Use :macro:`GSL_` as a prefix for all exported macros.
 
-All exported header files should have a filename with the prefix gsl_.
+All exported header files should have a filename with the prefix :code:`gsl_`.
 
-All installed libraries should have a name like libgslhistogram.a
+All installed libraries should have a name like :file:`libgslhistogram.a`.
 
 Any installed executables (utility programs etc) should have the prefix gsl- (with a hyphen, not an underscore).
 
@@ -316,11 +424,13 @@ All function names, variables, etc. should be in lower case. Macros and preproce
 
 Some common conventions in variable and function names:
 
-p1
-plus 1, e.g. function log1p(x) or a variable like kp1, =k+1.
+:var:`p1`
+   
+   plus 1, e.g. function :function:`log1p(x)` or a variable like :code:`kp1`, :math:`=k+1`.
 
-m1
-minus 1, e.g. function expm1(x) or a variable like km1, =k-1.
+:var:`m1`
+   
+   minus 1, e.g. function :function:`expm1(x)` or a variable like :code:`km1`, :math:`=k-1`.
 
 
 Header files
@@ -344,12 +454,16 @@ The target system is ANSI C, with a full Standard C Library, and IEEE arithmetic
 Function Names
 ---------------------------------------
 
-Each module has a name, which prefixes any function names in that module, e.g. the module gsl_fft has function names like gsl_fft_init. The modules correspond to subdirectories of the library source tree.
+Each module has a name, which prefixes any function names in that module, e.g. the module :file:`gsl_fft` has function names like :function:`gsl_fft_init`. 
+The modules correspond to subdirectories of the library source tree.
 
 Object-orientation
 ---------------------------------------
 
-The algorithms should be object oriented, but only to the extent that is easy in portable ANSI C. The use of casting or other tricks to simulate inheritance is not desirable, and the user should not have to be aware of anything like that. This means many types of patterns are ruled out. However, this is not considered a problem – they are too complicated for the library.
+The algorithms should be object oriented, but only to the extent that is easy in portable ANSI C. 
+The use of casting or other tricks to simulate inheritance is not desirable, 
+and the user should not have to be aware of anything like that. 
+This means many types of patterns are ruled out. However, this is not considered a problem - they are too complicated for the library.
 
 .. note::
     
@@ -397,7 +511,7 @@ We prefer to make structs which are minimal. For example, if a certain type of p
 
 Algorithm decomposition
 ---------------------------------------
-Iterative algorithms should be decomposed into an INITIALIZE, ITERATE, TEST form, so that the user can control the progress of the iteration and print out intermediate results. This is better than using call-backs or using flags to control whether the function prints out intermediate results. In fact, call-backs should not be used – if they seem necessary then it’s a sign that the algorithm should be broken down further into individual components so that the user has complete control over them.
+Iterative algorithms should be decomposed into an INITIALIZE, ITERATE, TEST form, so that the user can control the progress of the iteration and print out intermediate results. This is better than using call-backs or using flags to control whether the function prints out intermediate results. In fact, call-backs should not be used - if they seem necessary then it’s a sign that the algorithm should be broken down further into individual components so that the user has complete control over them.
 
 For example, when solving a differential equation the user may need to be able to advance the solution by individual steps, while tracking a realtime process. This is only possible if the algorithm is broken down into step-level components. Higher level decompositions would not give sufficient flexibility.
 
@@ -417,7 +531,7 @@ To avoid confusion over ownership, workspaces should not own each other or conta
 Memory layout
 ---------------------------------------
 
-We use flat blocks of memory to store matrices and vectors, not C-style pointer-to-pointer arrays. The matrices are stored in row-major order – i.e. the column index (second index) moves continuously through memory.
+We use flat blocks of memory to store matrices and vectors, not C-style pointer-to-pointer arrays. The matrices are stored in row-major order - i.e. the column index (second index) moves continuously through memory.
 
 
 Linear Algebra Levels
@@ -431,9 +545,9 @@ The philosophy here is to minimize the learning curve. If someone only needs to 
 
 This leads to the question of why we don’t do the same for matrices. In that case the argument list gets too long and confusing, with (size1, size2, tda) for each matrix and potential ambiguities over row vs column ordering. In this case, it makes sense to use gsl_vector and gsl_matrix, which take care of this for the user.
 
-So really the library has two levels – a lower level based on C types for 1d operations, and a higher level based on gsl_matrix and gsl_vector for general linear algebra.
+So really the library has two levels - a lower level based on C types for 1d operations, and a higher level based on gsl_matrix and gsl_vector for general linear algebra.
 
-Of course, it would be possible to define a vector version of the lower level functions too. So far we have not done that because it was not essential – it could be done but it is easy enough to get by using the C arguments, by typing v->data, v->stride, v->size instead. A gsl_vector version of low-level functions would mainly be a convenience.
+Of course, it would be possible to define a vector version of the lower level functions too. So far we have not done that because it was not essential - it could be done but it is easy enough to get by using the C arguments, by typing v->data, v->stride, v->size instead. A gsl_vector version of low-level functions would mainly be a convenience.
 
 Please use BLAS routines internally within the library whenever possible for efficiency.
 
@@ -450,7 +564,7 @@ The basic error handling procedure is the return code (see gsl_errno.h for a lis
 
 You should always use the GSL_ERROR macro to indicate an error, rather than just returning an error code. The macro allows the user to trap errors using the debugger (by setting a breakpoint on the function gsl_error).
 
-The only circumstances where GSL_ERROR should not be used are where the return value is "indicative" rather than an error – for example, the iterative routines use the return code to indicate the success or failure of an iteration. By the nature of an iterative algorithm "failure" (a return code of GSL_CONTINUE) is a normal occurrence and there is no need to use GSL_ERROR there.
+The only circumstances where GSL_ERROR should not be used are where the return value is "indicative" rather than an error - for example, the iterative routines use the return code to indicate the success or failure of an iteration. By the nature of an iterative algorithm "failure" (a return code of GSL_CONTINUE) is a normal occurrence and there is no need to use GSL_ERROR there.
 
 Be sure to free any memory allocated by your function if you return an error (in particular for errors in partially initialized objects).
 
