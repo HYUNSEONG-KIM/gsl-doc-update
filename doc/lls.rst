@@ -1928,17 +1928,18 @@ The tests used to prepare these routines are based on the NIST
 Statistical Reference Datasets. The datasets and their documentation are
 available from NIST at the following website,
 
-http://www.nist.gov/itl/div898/strd/index.html
+https://www.itl.nist.gov/div898/strd/
 
 More information on Tikhonov regularization can be found in
 
 * Hansen, P. C. (1998), Rank-Deficient and Discrete Ill-Posed Problems:
   Numerical Aspects of Linear Inversion. SIAM Monogr. on Mathematical
   Modeling and Computation, Society for Industrial and Applied Mathematics
+  isbn:9780898719697.
 
 * M. Rezghi and S. M. Hosseini (2009), A new variant of L-curve for
   Tikhonov regularization, Journal of Computational and Applied Mathematics,
-  Volume 231, Issue 2, pages 914-924.
+  Volume 231, Issue 2, pp. 914-924, DOI:10.1016/j.cam.2009.05.016.
 
 The GSL implementation of robust linear regression closely follows the publications
 
@@ -1947,16 +1948,15 @@ The GSL implementation of robust linear regression closely follows the publicati
   Computer Science and Statistics:  Proceedings of the 21st
   Symposium on the Interface, American Statistical Association
 
-* Street, J.O., R.J. Carroll, and D. Ruppert (1988), "A note on
-  computing robust regression estimates via iteratively
-  reweighted least squares," The American Statistician, v. 42, 
-  pp. 152-154.
+*  James O. Street, Raymond J. Carroll & David Ruppert (1988) 
+   A Note on Computing Robust Regression Estimates via Iteratively Reweighted Least Squares, 
+   The American Statistician, 42:2, pp. 152-154, DOI: 10.1080/00031305.1988.10475548 
 
 More information about the normal equations and TSQR approach for solving
 large linear least squares systems can be found in the publications
 
-* Trefethen, L. N. and Bau, D. (1997), "Numerical Linear Algebra", SIAM.
+* Trefethen, L. N. and Bau, D. (1997), "Numerical Linear Algebra", SIAM, isbn:9780898713619.
 
 * Demmel, J., Grigori, L., Hoemmen, M. F., and Langou, J.
   "Communication-optimal parallel and sequential QR and LU factorizations",
-  UCB Technical Report No. UCB/EECS-2008-89, 2008.
+  UCB Technical Report No. UCB/EECS-2008-89, 2008, url:http://www2.eecs.berkeley.edu/Pubs/TechRpts/2008/EECS-2008-89.pdf.

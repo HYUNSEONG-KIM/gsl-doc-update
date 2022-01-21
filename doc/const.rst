@@ -639,10 +639,10 @@ the NIST website.
 
 * P.J. Mohr, B.N. Taylor, D.B. Newell, "CODATA Recommended
   Values of the Fundamental Physical Constants: 2006", Reviews of
-  Modern Physics, 80(2), pp. 633--730 (2008) https://doi.org/10.1103/RevModPhys.80.633.
+  Modern Physics, 80(2), pp. 633--730 (2008) DOI:10.1103/RevModPhys.80.633.
 
 * http://www.physics.nist.gov/cuu/Constants/index.html
 
 * Thompson, A. and Taylor, B. , Guide for the Use of the International System of Units (SI), 
   Special Publication (NIST SP), National Institute of Standards and Technology, Gaithersburg, MD, [online], 
-  pp. 40--69 (2008) https://doi.org/10.6028/NIST.SP.811e2008.
+  Appendix B. Conversion Factors, pp. 40--69 (2008) DOI:10.6028/NIST.SP.811e2008.
