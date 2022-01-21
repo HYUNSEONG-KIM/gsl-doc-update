@@ -1183,7 +1183,3 @@ The precise conditions of the licenses for the programs currently being
 distributed that relate to GNU Scientific Library are found in the 
 General Public Licenses that accompany them.
 
-GNU Free Document License
-==========================
-
-.. include:: _static/fdl.txt
