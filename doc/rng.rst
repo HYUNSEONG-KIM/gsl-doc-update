@@ -1132,23 +1132,29 @@ Further information is available in the review paper written by Pierre
 L'Ecuyer,
 
 * P. L'Ecuyer, "Random Number Generation", Chapter 4 of the
-  Handbook on Simulation, Jerry Banks Ed., Wiley, 1998, 93--137.
+  Handbook on Simulation, Jerry Banks Ed., Wiley, 1998, pp. 93--137, 
+  isbn:9780471134039.
 
-* http://www.iro.umontreal.ca/~lecuyer/papers.html in the file :file:`handsim.ps`.
+      http://www.iro.umontreal.ca/~lecuyer/papers.html in the file :file:`handsim.ps`.
 
 The source code for the DIEHARD random number generator tests is also
 available online,
 
-* DIEHARD source code, G. Marsaglia, http://stat.fsu.edu/pub/diehard/
+* DIEHARD source code, G. Marsaglia, https://web.archive.org/web/20160125103112/http://stat.fsu.edu/pub/diehard/
+
+   The original source Florida State university website http://stat.fsu.edu/pub/diehard/ is dead 
+   but, this archive site contatins all the files of them.
 
 A comprehensive set of random number generator tests is available from
 NIST,
 
-* NIST Special Publication 800-22, "A Statistical Test Suite for the
-  Validation of Random Number Generators and Pseudo Random Number
-  Generators for Cryptographic Applications".
+* Bassham, L. , Rukhin, A. , Soto, J. , Nechvatal, J. , Smid, M. , Leigh, S. , Levenson, M. , Vangel, M. , Heckert, N. and Banks, D. (2010), 
+  A Statistical Test Suite for Random and Pseudorandom Number Generators for Cryptographic Applications, 
+  Special Publication (NIST SP), National Institute of Standards and Technology, 
+  Gaithersburg, MD, [online], 
+  https://tsapps.nist.gov/publication/get_pdf.cfm?pub_id=906762 (Accessed January 21, 2022) 
 
-* http://csrc.nist.gov/rng/
+* https://csrc.nist.gov/Projects/Random-Bit-Generation/Documentation-and-Software
 
 Acknowledgements
 ================
