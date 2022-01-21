@@ -470,7 +470,8 @@ This means many types of patterns are ruled out. However, this is not considered
     It is possible to define an abstract base class easily in C, 
     using function pointers. See the :code:`rng` directory for an example.
 
-When reimplementing public domain Fortran code, please try to introduce the appropriate object concepts as structs, rather than translating the code literally in terms of arrays. The structs can be useful just within the file, you don’t need to export them to the user.
+When reimplementing public domain Fortran code, please try to introduce the appropriate object concepts as structs, 
+rather than translating the code literally in terms of arrays. The structs can be useful just within the file, you don’t need to export them to the user.
 
 For example, if a Fortran program repeatedly uses a subroutine like,
 
@@ -478,7 +479,7 @@ For example, if a Fortran program repeatedly uses a subroutine like,
 
     SUBROUTINE  RESIZE (X, K, ND, K1)
 
-where X(K,D) represents a grid to be resized to X(K1,D) you can make this more readable by introducing a struct,
+where X(K,D) represents a grid to be resized to :code:`X(K1,D)` you can make this more readable by introducing a struct,
 
 .. code-block:: c
 
@@ -494,44 +495,66 @@ where X(K,D) represents a grid to be resized to X(K1,D) you can make this more r
     ...
     }
 
-Similarly, if you have a frequently recurring code fragment within a single file you can define a static or static inline function for it. This is typesafe and saves writing out everything in full.
+Similarly, if you have a frequently recurring code fragment within a single file 
+you can define a static or static inline function for it. This is typesafe and saves writing out everything in full.
 
 Comments
 ---------------------------------------
 
 Follow the GNU Coding Standards. A relevant quote is,
 
-“Please write complete sentences and capitalize the first word. If a lower-case identifier comes at the beginning of a sentence, don’t capitalize it! Changing the spelling makes it a different identifier. If you don’t like starting a sentence with a lower case letter, write the sentence differently (e.g., "The identifier lower-case is ...").”
+“Please write complete sentences and capitalize the first word. 
+If a lower-case identifier comes at the beginning of a sentence, 
+don’t capitalize it! Changing the spelling makes it a different identifier. 
+If you don’t like starting a sentence with a lower case letter, 
+write the sentence differently (e.g., "The identifier lower-case is ...").”
 
 
 Minimal structs
 ---------------------------------------
 
-We prefer to make structs which are minimal. For example, if a certain type of problem can be solved by several classes of algorithm (e.g. with and without derivative information) it is better to make separate types of struct to handle those cases. i.e. run time type identification is not desirable.
+We prefer to make structs which are minimal. For example, 
+if a certain type of problem can be solved by several classes of algorithm 
+(e.g. with and without derivative information) it is better to make separate 
+types of struct to handle those cases. i.e. run time type identification is not desirable.
 
 Algorithm decomposition
 ---------------------------------------
-Iterative algorithms should be decomposed into an INITIALIZE, ITERATE, TEST form, so that the user can control the progress of the iteration and print out intermediate results. This is better than using call-backs or using flags to control whether the function prints out intermediate results. In fact, call-backs should not be used - if they seem necessary then it’s a sign that the algorithm should be broken down further into individual components so that the user has complete control over them.
 
-For example, when solving a differential equation the user may need to be able to advance the solution by individual steps, while tracking a realtime process. This is only possible if the algorithm is broken down into step-level components. Higher level decompositions would not give sufficient flexibility.
+Iterative algorithms should be decomposed into an INITIALIZE, ITERATE, TEST form, 
+so that the user can control the progress of the iteration and print out intermediate results. 
+This is better than using call-backs or using flags to control whether 
+the function prints out intermediate results. In fact, call-backs should not be used 
+- if they seem necessary then it’s a sign that the algorithm should be broken down further 
+into individual components so that the user has complete control over them.
+
+For example, when solving a differential equation the user may need to be able to advance 
+the solution by individual steps, while tracking a realtime process. 
+This is only possible if the algorithm is broken down into step-level components. 
+Higher level decompositions would not give sufficient flexibility.
 
 
 Memory allocation and ownership
 ---------------------------------------
 
-Functions which allocate memory on the heap should end in _alloc (e.g. gsl_foo_alloc) and be deallocated by a corresponding _free function (gsl_foo_free).
+Functions which allocate memory on the heap should end in :code:`_alloc` (e.g. :code:`gsl_foo_alloc`) and 
+be deallocated by a corresponding :code:`_free` function (:code:`gsl_foo_free`).
 
 Be sure to free any memory allocated by your function if you have to return an error in a partially initialized object.
 
-Don’t allocate memory ’temporarily’ inside a function and then free it before the function returns. This prevents the user from controlling memory allocation. All memory should be allocated and freed through separate functions and passed around as a "workspace" argument. This allows memory allocation to be factored out of tight loops.
+Don’t allocate memory ’temporarily’ inside a function and then free it before the function returns. 
+This prevents the user from controlling memory allocation. All memory should be allocated and freed through 
+separate functions and passed around as a "workspace" argument. This allows memory allocation to be factored out of tight loops.
 
-To avoid confusion over ownership, workspaces should not own each other or contain other workspaces. For clarity and ease of use in different contexts, they should be allocated from integer arguments rather than derived from other structs.
+To avoid confusion over ownership, workspaces should not own each other or contain other workspaces. 
+For clarity and ease of use in different contexts, they should be allocated from integer arguments rather than derived from other structs.
 
 
 Memory layout
 ---------------------------------------
 
-We use flat blocks of memory to store matrices and vectors, not C-style pointer-to-pointer arrays. The matrices are stored in row-major order - i.e. the column index (second index) moves continuously through memory.
+We use flat blocks of memory to store matrices and vectors, not C-style pointer-to-pointer arrays. 
+The matrices are stored in row-major order - i.e. the column index (second index) moves continuously through memory.
 
 
 Linear Algebra Levels
@@ -539,15 +562,24 @@ Linear Algebra Levels
 
 Functions using linear algebra are divided into two levels:
 
-For purely "1d" functions we use the C-style arguments (double *, stride, size) so that it is simpler to use the functions in a normal C program, without needing to invoke all the gsl_vector machinery.
+For purely "1d" functions we use the C-style arguments (:code:`double *`, :code:`stride`, :code:`size`) 
+so that it is simpler to use the functions in a normal C program, without needing to invoke all the :code:`gsl_vector `machinery.
 
-The philosophy here is to minimize the learning curve. If someone only needs to use one function, like an fft, they can do so without having to learn about gsl_vector.
+The philosophy here is to minimize the learning curve. 
+If someone only needs to use one function, like an fft, 
+they can do so without having to learn about :code:`gsl_vector`.
 
-This leads to the question of why we don’t do the same for matrices. In that case the argument list gets too long and confusing, with (size1, size2, tda) for each matrix and potential ambiguities over row vs column ordering. In this case, it makes sense to use gsl_vector and gsl_matrix, which take care of this for the user.
+This leads to the question of why we don’t do the same for matrices. 
+In that case the argument list gets too long and confusing, with (:code:`size1`, :code:`size2`, :code:`tda`) 
+for each matrix and potential ambiguities over row vs column ordering. 
+In this case, it makes sense to use :code:`gsl_vector` and :code:`gsl_matrix`, which take care of this for the user.
 
-So really the library has two levels - a lower level based on C types for 1d operations, and a higher level based on gsl_matrix and gsl_vector for general linear algebra.
+So really the library has two levels - a lower level based on C types for 1d operations, 
+and a higher level based on :code:`gsl_matrix` and :code:`gsl_vector` for general linear algebra.
 
-Of course, it would be possible to define a vector version of the lower level functions too. So far we have not done that because it was not essential - it could be done but it is easy enough to get by using the C arguments, by typing v->data, v->stride, v->size instead. A gsl_vector version of low-level functions would mainly be a convenience.
+Of course, it would be possible to define a vector version of the lower level functions too. 
+So far we have not done that because it was not essential - it could be done but it is easy enough to get by using the C arguments, 
+by typing :code:`v->data`, :code:`v->stride`, :code:`v->size` instead. A :code:`gsl_vector` version of low-level functions would mainly be a convenience.
 
 Please use BLAS routines internally within the library whenever possible for efficiency.
 
@@ -555,16 +587,28 @@ Please use BLAS routines internally within the library whenever possible for eff
 Error estimates
 ---------------------------------------
 
-In the special functions error bounds are given as twice the expected “Gaussian” error, i.e. 2-sigma, so the result is inside the error 98% of the time. People expect the true value to be within +/- the quoted error (this wouldn’t be the case 32% of the time for 1 sigma). Obviously the errors are not Gaussian but a factor of two works well in practice.
+In the special functions error bounds are given as twice the expected “Gaussian” error, 
+i.e. 2-sigma, so the result is inside the error 98% of the time. 
+People expect the true value to be within +/- the quoted error (this wouldn’t be the case 32% of the time for 1 sigma). 
+Obviously the errors are not Gaussian but a factor of two works well in practice.
 
 Exceptions and Error handling
 ---------------------------------------
 
-The basic error handling procedure is the return code (see gsl_errno.h for a list of allowed values). Use the GSL_ERROR macro to mark an error. The current definition of this macro is not ideal but it can be changed at compile time.
+The basic error handling procedure is the return code 
+(see :file:`gsl_errno.h` for a list of allowed values). 
+Use the :macro:`GSL_ERROR` macro to mark an error. 
+The current definition of this macro is not ideal but it can be changed at compile time.
 
-You should always use the GSL_ERROR macro to indicate an error, rather than just returning an error code. The macro allows the user to trap errors using the debugger (by setting a breakpoint on the function gsl_error).
+You should always use the :macro:`GSL_ERROR` macro to indicate an error, 
+rather than just returning an error code. 
+The macro allows the user to trap errors using the debugger (by setting a breakpoint on the function :function:`gsl_error`).
 
-The only circumstances where GSL_ERROR should not be used are where the return value is "indicative" rather than an error - for example, the iterative routines use the return code to indicate the success or failure of an iteration. By the nature of an iterative algorithm "failure" (a return code of GSL_CONTINUE) is a normal occurrence and there is no need to use GSL_ERROR there.
+The only circumstances where :macro:`GSL_ERROR` should not be used are where 
+the return value is "indicative" rather than an error 
+- for example, the iterative routines use the return code to indicate the success or failure of an iteration. 
+By the nature of an iterative algorithm "failure" (a return code of :macro:`GSL_CONTINUE`) is a normal occurrence 
+and there is no need to use :macro:`GSL_ERROR` there.
 
 Be sure to free any memory allocated by your function if you return an error (in particular for errors in partially initialized objects).
 
@@ -572,7 +616,8 @@ Persistence
 ---------------------------------------
 
 
-If you make an object foo which uses blocks of memory (e.g. vector, matrix, histogram) you can provide functions for reading and writing those blocks,
+If you make an object foo which uses blocks of memory 
+(e.g. vector, matrix, histogram) you can provide functions for reading and writing those blocks,
 
 .. code-block:: c
 
@@ -581,7 +626,12 @@ If you make an object foo which uses blocks of memory (e.g. vector, matrix, hist
      int gsl_foo_fscanf (FILE * stream, gsl_foo * v);
      int gsl_foo_fprintf (FILE * stream, const gsl_foo * v, const char *format);
 
-Only dump out the blocks of memory, not any associated parameters such as lengths. The idea is for the user to build higher level input/output facilities using the functions the library provides. The fprintf/fscanf versions should be portable between architectures, while the binary versions should be the "raw" version of the data. Use the functions
+Only dump out the blocks of memory, 
+not any associated parameters such as lengths. 
+The idea is for the user to build higher level input/output facilities using the functions the library provides. 
+The :code:`fprintf/fscanf` versions should be portable between architectures, 
+while the binary versions should be the "raw" version of the data. 
+Use the functions
 
 .. code-block:: c
 
@@ -608,7 +658,9 @@ Using Return Values
 ---------------------------------------
 
 
-Always assign a return value to a variable before using it. This allows easier debugging of the function, and inspection and modification of the return value. If the variable is only needed temporarily then enclose it in a suitable scope.
+Always assign a return value to a variable before using it. 
+This allows easier debugging of the function, and inspection and modification of the return value. 
+If the variable is only needed temporarily then enclose it in a suitable scope.
 
 For example, instead of writing,
 
@@ -626,68 +678,71 @@ use temporary variables to store the intermediate values,
       a = f(v);
     }
 
-These can then be inspected more easily in the debugger, and breakpoints can be placed more precisely. The compiler will eliminate the temporary variables automatically when the program is compiled with optimization.
+These can then be inspected more easily in the debugger, 
+and breakpoints can be placed more precisely. 
+The compiler will eliminate the temporary variables automatically 
+when the program is compiled with optimization.
 
 Variable Names
 ---------------------------------------
 
 Try to follow existing conventions for variable names,
 
-dim
+:var:`dim`
      
      number of dimensions
 
-w
+:var:`w`
      
      pointer to workspace
 
-state
+:var:`state`
      
-     pointer to state variable (use s if you need to save characters)
+     pointer to state variable (use :var:`s` if you need to save characters)
 
-result
+:var:`result`
      
      pointer to result (output variable)
 
-abserr
+:var:`abserr`
      
      absolute error
 
-relerr
+:var:`relerr`
      
      relative error
 
-epsabs
+:var:`epsabs`
      
      absolute tolerance
 
-epsrel
+:var:`epsrel`
      
      relative tolerance
 
-size
+:var:`size`
      
-     the size of an array or vector e.g. double array[size]
+     the size of an array or vector e.g. :code:`double array[size]`
 
-stride
+:var:`stride`
      
      the stride of a vector
 
-size1
+:var:`size1`
      
      the number of rows in a matrix
 
-size2
+:var:`size2`
      
      the number of columns in a matrix
 
-n
+:var:`n`
 
      general integer number, e.g. number of elements of array, in fft, etc
 
-r
+:var:`r`
 
-     random number generator (gsl_rng)
+     random number generator (:function:`gsl_rng`)
 
 Datatype widths
 ---------------------------------------
@@ -696,7 +751,8 @@ Be aware that in ANSI C the type :type:`int` is only guaranteed to provide 16-bi
 It may provide more, but is not guaranteed to. 
 Therefore if you require 32 bits you must use :type:`long int`, 
 which will have 32 bits or more. 
-Of course, on many platforms the type :type:`int` does have 32 bits instead of 16 bits but we have to code to the ANSI standard rather than a specific platform.
+Of course, on many platforms the type :type:`int` does have 32 bits instead of 16 bits 
+but we have to code to the ANSI standard rather than a specific platform.
 
 
 size_t

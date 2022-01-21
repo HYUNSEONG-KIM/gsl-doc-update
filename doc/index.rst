@@ -61,6 +61,7 @@ GNU Scientific Library
    contrib.rst
    autoconf.rst
    cblas.rst
+   gsl-design.rst
    gpl.rst
    fdl.rst
 
