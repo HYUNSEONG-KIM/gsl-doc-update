@@ -78,7 +78,8 @@ will contribute.
 Contributing
 ==========================
 
-This design document was originally written in 1996. As of 2004, GSL itself is essentially feature complete, 
+This design document was originally written in 1996. 
+As of 2004, GSL itself is essentially feature complete, 
 the developers are not actively working on any major new functionality.
 
 The main emphasis is now on ensuring the stability of the existing functions, improving consistency, 
@@ -424,9 +425,9 @@ All function names, variables, etc. should be in lower case. Macros and preproce
 
 Some common conventions in variable and function names:
 
-:var:`p1`
+:var:`1p`
    
-   plus 1, e.g. function :func:`log1p(x)` or a variable like :code:`kp1`, :math:`=k+1`.
+   plus 1, e.g. function :func:`log1p(x)` or a variable like :code:`k1p`, :math:`=k+1`.
 
 :var:`m1`
    
@@ -542,9 +543,15 @@ be deallocated by a corresponding :code:`_free` function (:code:`gsl_foo_free`).
 
 Be sure to free any memory allocated by your function if you have to return an error in a partially initialized object.
 
-Don’t allocate memory ’temporarily’ inside a function and then free it before the function returns. 
-This prevents the user from controlling memory allocation. All memory should be allocated and freed through 
-separate functions and passed around as a "workspace" argument. This allows memory allocation to be factored out of tight loops.
+.. danger::
+
+   Don’t allocate memory ’temporarily’ inside a function and then free it before the function returns. 
+   This prevents the user from controlling memory allocation. 
+
+All memory should be allocated and freed through 
+separate functions and passed around as a "workspace" argument. 
+This allows memory allocation to be factored out of tight loops.
+
 
 To avoid confusion over ownership, workspaces should not own each other or contain other workspaces. 
 For clarity and ease of use in different contexts, they should be allocated from integer arguments rather than derived from other structs.
