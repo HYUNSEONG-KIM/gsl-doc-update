@@ -426,11 +426,11 @@ Some common conventions in variable and function names:
 
 :var:`p1`
    
-   plus 1, e.g. function :function:`log1p(x)` or a variable like :code:`kp1`, :math:`=k+1`.
+   plus 1, e.g. function :func:`log1p(x)` or a variable like :code:`kp1`, :math:`=k+1`.
 
 :var:`m1`
    
-   minus 1, e.g. function :function:`expm1(x)` or a variable like :code:`km1`, :math:`=k-1`.
+   minus 1, e.g. function :func:`expm1(x)` or a variable like :code:`km1`, :math:`=k-1`.
 
 
 Header files
@@ -454,7 +454,7 @@ The target system is ANSI C, with a full Standard C Library, and IEEE arithmetic
 Function Names
 ---------------------------------------
 
-Each module has a name, which prefixes any function names in that module, e.g. the module :file:`gsl_fft` has function names like :function:`gsl_fft_init`. 
+Each module has a name, which prefixes any function names in that module, e.g. the module :file:`gsl_fft` has function names like :func:`gsl_fft_init`. 
 The modules correspond to subdirectories of the library source tree.
 
 Object-orientation
@@ -602,7 +602,7 @@ The current definition of this macro is not ideal but it can be changed at compi
 
 You should always use the :macro:`GSL_ERROR` macro to indicate an error, 
 rather than just returning an error code. 
-The macro allows the user to trap errors using the debugger (by setting a breakpoint on the function :function:`gsl_error`).
+The macro allows the user to trap errors using the debugger (by setting a breakpoint on the function :func:`gsl_error`).
 
 The only circumstances where :macro:`GSL_ERROR` should not be used are where 
 the return value is "indicative" rather than an error 
@@ -742,7 +742,7 @@ Try to follow existing conventions for variable names,
 
 :var:`r`
 
-     random number generator (:function:`gsl_rng`)
+     random number generator (:func:`gsl_rng`)
 
 Datatype widths
 ---------------------------------------
@@ -963,9 +963,9 @@ relations between them that could allow bugs to be missed through silent cancell
 
 If you need some random floats to put in the test programs use :code:`od -f /dev/random` as a source of inspiration.
 
-Don’t use :function:`sprintf` to create output strings in the tests. 
+Don’t use :func:`sprintf` to create output strings in the tests. 
 It can cause hard to find bugs in the test programs themselves. 
-The functions :function:`sl_test_...` support format string arguments so use these instead.
+The functions :func:`sl_test_...` support format string arguments so use these instead.
 
 Compilation
 ---------------------------------------
@@ -1068,13 +1068,13 @@ it would be useful to people. If it is done,
 it would be as a separate wrapper that can be maintained and shipped separately.
 
 There is a separate issue of system libraries, such as BSD math library and functions 
-like :function:`expm1`, :function:`log1p`, :function:`hypot`. 
+like :func:`expm1`, :func:`log1p`, :func:`hypot`. 
 The functions in this library are available on nearly every platform (but not all).
 
 In this case, it is best to write code in terms of these native functions to take advantage 
-of the vendor-supplied system library (for example :function:`log1p` is a machine instruction on the Intel x86). 
-The library also provides portable implementations e.g. :function:`gsl_hypot` which are used as an automatic fall back via autoconf when necessary. 
-See the usage of :function:`hypot` in :file:`gsl/complex/math.c`, the implementation of :function:`gsl_hypot` and the corresponding parts of 
+of the vendor-supplied system library (for example :func:`log1p` is a machine instruction on the Intel x86). 
+The library also provides portable implementations e.g. :func:`gsl_hypot` which are used as an automatic fall back via autoconf when necessary. 
+See the usage of :func:`hypot` in :file:`gsl/complex/math.c`, the implementation of :func:`gsl_hypot` and the corresponding parts of 
 files :file:`configure.in` and :file:`config.h.in` as an example.
 
 
