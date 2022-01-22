@@ -425,11 +425,11 @@ All function names, variables, etc. should be in lower case. Macros and preproce
 
 Some common conventions in variable and function names:
 
-:var:`1p`
+:code:`1p`
    
    plus 1, e.g. function :func:`log1p(x)` or a variable like :code:`k1p`, :math:`=k+1`.
 
-:var:`m1`
+:code:`m1`
    
    minus 1, e.g. function :func:`expm1(x)` or a variable like :code:`km1`, :math:`=k-1`.
 
@@ -695,59 +695,59 @@ Variable Names
 
 Try to follow existing conventions for variable names,
 
-:var:`dim`
+:code:`dim`
      
      number of dimensions
 
-:var:`w`
+:code:`w`
      
      pointer to workspace
 
-:var:`state`
+:code:`state`
      
-     pointer to state variable (use :var:`s` if you need to save characters)
+     pointer to state variable (use :code:`s` if you need to save characters)
 
-:var:`result`
+:code:`result`
      
      pointer to result (output variable)
 
-:var:`abserr`
+:code:`abserr`
      
      absolute error
 
-:var:`relerr`
+:code:`relerr`
      
      relative error
 
-:var:`epsabs`
+:code:`epsabs`
      
      absolute tolerance
 
-:var:`epsrel`
+:code:`epsrel`
      
      relative tolerance
 
-:var:`size`
+:code:`size`
      
      the size of an array or vector e.g. :code:`double array[size]`
 
-:var:`stride`
+:code:`stride`
      
      the stride of a vector
 
-:var:`size1`
+:code:`size1`
      
      the number of rows in a matrix
 
-:var:`size2`
+:code:`size2`
      
      the number of columns in a matrix
 
-:var:`n`
+:code:`n`
 
      general integer number, e.g. number of elements of array, in fft, etc
 
-:var:`r`
+:code:`r`
 
      random number generator (:func:`gsl_rng`)
 
@@ -903,7 +903,7 @@ Arbitary Constants
 
 Avoid arbitrary constants.
 
-For example, don’t hard code "small" values like :var:`1e-30`, :var:`1e-100`` or :macro:`10*GSL_DBL_EPSILON`` into the routines. 
+For example, don’t hard code "small" values like :code:`1e-30`, :code:`1e-100`` or :macro:`10*GSL_DBL_EPSILON`` into the routines. 
 This is not appropriate for a general purpose library.
 
 Compute values accurately using IEEE arithmetic. 
@@ -1105,8 +1105,8 @@ This makes it easier to port the routines to different precisions.
 Miscellaneous
 ---------------------------------------
 
-Don’t use the letter :var:`l` as a variable name — it is difficult to distinguish 
-from the number :var:`1`. (This seems to be a favorite in old Fortran programs).
+Don’t use the letter :code:`l` as a variable name — it is difficult to distinguish 
+from the number :code:`1`. (This seems to be a favorite in old Fortran programs).
 
 
 .. tip:: Final
