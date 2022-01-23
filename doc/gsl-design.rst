@@ -354,19 +354,22 @@ For example, references concerning algorithms should be to Knuth, references con
 references concerning special functions should be to Abramowitz & Stegun (Handbook of Mathematical Functions AMS-55), etc. 
 Wherever possible refer to Abramowitz & Stegun rather than other reference books because it is a public domain work, so it is inexpensive and freely redistributable.
 
-
 The standard references have a better chance of being available in an accessible library for the user. 
 If they are not available and the user decides to buy a copy in order to look up the reference ]
 then this also gives them the best quality book which should also cover the largest number of other references in the GSL Manual. 
 If many different books were to be referenced this would be an expensive and inefficient use of resources for a user who needs to look up the details of the algorithms. 
 Reference books also stay in print much longer than text books, which are often out-of-print after a few years.
 
-
 Similarly, cite original papers wherever possible. Be sure to keep copies of these for your own reference 
 (e.g. when dealing with bug reports) or to pass on to future maintainers.
 
 If you need help in tracking down references, ask on the gsl-discuss mailing list. 
 There is a group of volunteers with access to good libraries who have offered to help GSL developers get copies of papers.
+
+
+
+Texinfo
+~~~~~~~~~~~~~~~~~~~~~~~
 
 To write mathematics in the texinfo file you can use the :code:`@math` command with simple TeX commands. 
 These are automatically surrounded by :code:`$...$` for math mode. For example,
@@ -406,6 +409,17 @@ It looks nicer if some of the more cryptic TeX commands are given a C-style asci
      @math{x >= y}
 
 will be appropriately displayed in both TeX and Info.
+
+Rst
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+After version 2.4 of library, document format is changed to **rst** format from **texi** .
+Rst is a abbreviation of ReStructedText. 
+Originally, came form python documentation project.
+However, it does not mean that we do not use texi anymore. 
+Rst is came modern python documentation project and it can be easily converted to 
+many other formats such as Tex, Texinfo, HTML, including pdf and postscrpt.
+
 
 
 Namespace
